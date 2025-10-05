@@ -34,7 +34,6 @@ public class InvoiceController {
         return Map.of("upserts", upserts);
     }
 
-    // 列表：原有
     @GetMapping("/invoices")
     public Page<InvoiceView> page(@RequestParam(defaultValue = "0") @Min(0) int page,
                                   @RequestParam(defaultValue = "10") @Min(1) @Max(200) int size,
@@ -43,20 +42,16 @@ public class InvoiceController {
         return querySvc.pageViews(page, size, status, q);
     }
 
-    // 通用 aging：原有
     @GetMapping("/invoices/aging")
     public Map<String, Object> aging() {
         return querySvc.aging();
     }
 
-    // 总览：原有
     @GetMapping("/summary")
     public SummaryView invoiceSummary() {
         return querySvc.summary();
     }
 
-    // ✅ 新增：逾期列表（点击 Overdue 卡片/某个桶时调用）
-    // bucket 取值建议严格限定："0-7"|"8-30"|"31-60"|"61-90"|">90"
     @GetMapping("/invoices/overdue")
     public Page<InvoiceView> overduePage(@RequestParam(defaultValue = "0") @Min(0) int page,
                                          @RequestParam(defaultValue = "10") @Min(1) @Max(200) int size,
@@ -65,7 +60,6 @@ public class InvoiceController {
         return querySvc.pageOverdue(page, size, bucket, q);
     }
 
-    // ✅ 新增：仅逾期的 aging 聚合（喂 Overdue 柱状图）
     @GetMapping("/invoices/aging/overdue")
     public Map<String, Object> overdueAging() {
         return querySvc.overdueAging();

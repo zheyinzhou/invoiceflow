@@ -30,25 +30,23 @@ public class AuthController {
                                  @RequestParam(value="realmId", required=false) String realmId,
                                  @RequestParam("state") String state,
                                  HttpSession session) throws Exception {
-        // 1) CSRF 校验
+        // 1) CSRF
         Object saved = session.getAttribute("csrfToken");
         if (saved == null || !saved.equals(state)) {
             throw new IllegalStateException("Invalid state (CSRF check failed)");
         }
 
-        // 2) realmId 必须要有（只要勾了 Accounting scope，回调就应该带）
+        // 2) realmId
         if (realmId == null || realmId.isBlank()) {
             throw new IllegalStateException("Missing realmId from OAuth callback");
         }
 
-        // 3) 用 code 换 token（交给服务）
+        // 3) code exchange token
         auth.exchangeCodeForTokens(code);
 
-        // 4) 保存 realmId（和 token 同层存储）
+        // 4) save realmId
         store.setRealmId(realmId);
 
-        // 5) 跳到连接状态页（或跳回前端页面）
-//        return new RedirectView("/connected", true, true, false);
         return new RedirectView("http://localhost:5173/");
     }
 
