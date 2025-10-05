@@ -17,13 +17,12 @@ public class RiskTopService {
         var today = java.time.LocalDate.now();
         var rows = repo.findOverdueCandidates(); // 你已有：balance>0 & dueDate not null
 
-        // 仅保留“今天仍逾期”的票
         var overdueRows = rows.stream()
                 .filter(i -> i.getDueDate()!=null && i.getDueDate().isBefore(today))
                 .filter(i -> i.getBalance()!=null && i.getBalance().signum()>0)
                 .toList();
 
-        // 按客户聚合（先用 name；trim 防止空格）
+        // grouping by customers
         record Acc(int invoices, java.math.BigDecimal total, java.math.BigDecimal overdue, int maxDpd) {}
         var map = new java.util.HashMap<String, Acc>();
         for (var i : overdueRows) {
@@ -41,7 +40,6 @@ public class RiskTopService {
             map.put(key, acc);
         }
 
-        // 映射成 DTO
         var list = new java.util.ArrayList<CustomerRiskDTO>();
         for (var e : map.entrySet()) {
             var a = e.getValue();
@@ -50,7 +48,6 @@ public class RiskTopService {
             list.add(new CustomerRiskDTO(e.getKey(), a.invoices, a.total, a.overdue, a.maxDpd, ratio));
         }
 
-        // 按模式排序
         list.sort(switch (mode) {
             case AMOUNT   -> java.util.Comparator.<CustomerRiskDTO, java.math.BigDecimal>comparing(CustomerRiskDTO::overdue).reversed();
             case MAX_DAYS -> java.util.Comparator.<CustomerRiskDTO, Integer>comparing(CustomerRiskDTO::maxDpd).reversed()
@@ -59,7 +56,7 @@ public class RiskTopService {
                     .thenComparing((CustomerRiskDTO r)-> r.overdue(), java.util.Comparator.reverseOrder());
         });
 
-        // 取 Top N
+        // pick Top N
         return list.subList(0, Math.min(top, list.size()));
     }
 

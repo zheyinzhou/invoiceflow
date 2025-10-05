@@ -24,12 +24,10 @@ public class InvoiceSyncService {
         this.factory = factory; this.repo = repo;
     }
 
-    /** 从 QBO 拉取 batch 条发票并 upsert 到 H2 */
+    /** sync batch data from QBO and insert to H2 */
     @Transactional
     public int syncFromQbo(int batch) throws Exception {
         var ds = factory.get();
-//        String q = "select Id, TotalAmt, Balance, DueDate, TxnDate, TxnStatus, CustomerRef "
-//                + "from Invoice startposition 1 maxresults " + Math.min(500, Math.max(1, batch));
         String sql = "select * from invoice";
         QueryResult queryResult = ds.executeQuery(sql);
 
@@ -48,7 +46,7 @@ public class InvoiceSyncService {
             ent.setTxnDate(inv.getTxnDate() == null ? null : inv.getTxnDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             ent.setDueDate(inv.getDueDate() == null ? null : inv.getDueDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
-            // 状态机
+            // status
             BigDecimal total = inv.getTotalAmt()==null? BigDecimal.ZERO: inv.getTotalAmt();
             BigDecimal bal   = inv.getBalance()==null? BigDecimal.ZERO: inv.getBalance();
             String status;

@@ -1,6 +1,5 @@
 package com.zzy.web;
 
-import com.intuit.ipp.util.Config;
 import com.intuit.oauth2.config.Environment;
 import com.zzy.auth.TokenStore;
 import com.zzy.qbo.QboDataServiceFactory;
@@ -8,9 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api")
@@ -33,21 +31,20 @@ public class CompanyController {
             ));
         }
 
-        // 1) 关键诊断打印（别打印完整 token）
         String realm = store.getRealmId();
-        String env   = "SANDBOX"; // 如果你有 props.getEnvironment() 就用它
+        String env  = Environment.SANDBOX.name();
         String token = store.getAccessToken();
         String tokenPrefix = token == null ? "null" : token.substring(0, 8) + "...";
         log.info("QBO DIAG: realmId={}, env={}, accessToken~={}", realm, env, tokenPrefix);
 
-        // 2) 解码 Access Token（不验证签名，只为看 claims：aud/scope/exp）
+        // 2) parse Access Token
         try {
-            String[] parts = token.split("\\.");
+            String[] parts = Objects.requireNonNull(token).split("\\.");
             if (parts.length >= 2) {
                 String claimsJson = new String(java.util.Base64.getUrlDecoder().decode(parts[1]), java.nio.charset.StandardCharsets.UTF_8);
                 log.info("QBO DIAG: token.claims={}", claimsJson);
             }
-        } catch (Exception ignore) { /* 解码失败不影响流程 */ }
+        } catch (Exception ignore) { }
 
         try {
             var ds = factory.get();

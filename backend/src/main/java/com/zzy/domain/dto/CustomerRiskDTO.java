@@ -1,10 +1,12 @@
 package com.zzy.domain.dto;
 
+import java.math.BigDecimal;
+
 public record CustomerRiskDTO(
-        String customer,            // 先用 name；等你有 customer_id 再替换
+        String customer,            // TODO: need customer ID
         int invoices,
-        java.math.BigDecimal total, // 合计开票额（这些逾期单）
-        java.math.BigDecimal overdue,
-        int maxDpd,                 // 最大逾期天数
+        BigDecimal total,
+        BigDecimal overdue,
+        int maxDpd,
         double ratio                // overdue / total (0..1)
 ) {}

@@ -24,7 +24,6 @@ public class InvoiceHelper {
         inv.setTxnDate(toDate(today));
         inv.setDueDate(toDate(due));
 
-        // 一行销售明细：金额 = 单价 * 数量（数量=1）
         List<Line> lines = List.of(buildSalesLine(itemRef, BigDecimal.ONE, money(amount), note));
         inv.setLine(lines);
 
@@ -39,7 +38,7 @@ public class InvoiceHelper {
         sld.setItemRef(itemRef);
         sld.setQty(qty);
         sld.setUnitPrice(unitPrice);
-        // 若需要免税，可启用：
+        // no tax
         // setNoTax(sld);
 
         Line line = new Line();

@@ -39,7 +39,6 @@ public class InvoiceCreateService {
         Invoice inv = buildInvoice(custRef, itemRef, req.amount, req.daysUntilDue, req.note);
         Invoice created = ds.add(inv);
 
-        // —— 落 H2：表格/饼图需要的最小字段 ——
         InvoiceEntity e = new InvoiceEntity();
         e.setQboId(created.getId());
         e.setCustomerName(created.getCustomerRef() == null ? null : created.getCustomerRef().getName());
@@ -47,18 +46,17 @@ public class InvoiceCreateService {
         e.setBalance(created.getBalance()  != null ? created.getBalance()  : req.amount);
         e.setTxnDate(toLocalDate(created.getTxnDate()));
         e.setDueDate(toLocalDate(created.getDueDate()));
-        e.setStatus("OPEN");   // 简化：新建即 OPEN
+        e.setStatus("OPEN");
         return repo.save(e);
     }
 
-    // --- helpers: 查询引用对象 ---
     private ReferenceType resolveCustomerRef(DataService ds, String name) throws FMSException {
         String q = (name != null && !name.isBlank())
                 ? "select Id, DisplayName from Customer where Active=true and DisplayName='"+esc(name)+"'"
                 : "select Id, DisplayName from Customer where Active=true startposition 1 maxresults 1";
         var qr = ds.executeQuery(q);
         if (!qr.getEntities().isEmpty()) {
-            Customer c = (Customer) qr.getEntities().get(0);
+            Customer c = (Customer) qr.getEntities().getFirst();
             ReferenceType r = new ReferenceType();
             r.setValue(c.getId());
             r.setName(c.getDisplayName());
@@ -73,7 +71,7 @@ public class InvoiceCreateService {
                 : "select Id, Name from Item where Active=true and Type='Service' startposition 1 maxresults 1";
         var qr = ds.executeQuery(q);
         if (!qr.getEntities().isEmpty()) {
-            Item it = (Item) qr.getEntities().get(0);
+            Item it = (Item) qr.getEntities().getFirst();
             ReferenceType r = new ReferenceType();
             r.setValue(it.getId());
             r.setName(it.getName());

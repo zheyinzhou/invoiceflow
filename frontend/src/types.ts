@@ -14,7 +14,6 @@ export interface InvoiceView {
     dueDate: string;
     overdue: boolean;
 
-    // 后端若已提供，就接住；若没有也不影响渲染
     daysUntilDue?: number;
     bucket?: AgingBucket | string;
 }
@@ -38,6 +37,3 @@ export interface SummaryView {
     partialAmount: number;
     paidAmount: number;
 }
-
-/** ✅ 与后端 /invoices/aging 与 /invoices/aging/overdue 的返回保持一致 */
-export type AgingResponse = Record<AgingBucket, { count: number; amount: number }>;

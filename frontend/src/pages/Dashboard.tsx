@@ -10,18 +10,6 @@ import {
 import {fmtMoney} from "../utils/format.ts";
 
 const COLORS = ['#6C8AE4', '#63D1A3', '#FFC85A'];
-// const locale = navigator.language || 'en-US';
-// export const numberFmt = new Intl.NumberFormat(locale, {
-//     minimumFractionDigits: 2,
-//     maximumFractionDigits: 2,
-// });
-//
-// export const fmtMoney = (v: unknown): string => {
-//     if (v == null || v === '') return '--';
-//     const raw = typeof v === 'number' ? v : Number(String(v).replace(/,/g, ''));
-//     if (!Number.isFinite(raw)) return '--';
-//     return numberFmt.format(raw);
-// };
 export default function Dashboard() {
     const [summary, setSummary] = useState<SummaryView | null>(null);
     const [page, setPage] = useState(0);
@@ -44,7 +32,7 @@ export default function Dashboard() {
                 if (overdueOnly || bucketFilter) {
                     const data = await fetchOverdue({
                         page, size: 10, q,
-                        bucket: bucketFilter || undefined, // 注意 ASCII "-"
+                        bucket: bucketFilter || undefined, //  ASCII "-"
                     });
                     setTable(data);
                 } else {
@@ -108,7 +96,6 @@ export default function Dashboard() {
         return list as InvoiceView[];
     }, [table, overdueOnly, bucketFilter]);
 
-    // 顶部卡片点击
     const handleCardClick = (key: 'OPEN'|'PARTIAL_PAID'|'PAID'|'OVERDUE') => {
         setPage(0);
         setBucketFilter(null);
@@ -153,7 +140,6 @@ export default function Dashboard() {
                 }}
             >
 
-                {/* 左侧：饼图 + 逾期柱状图（上下堆叠） */}
                 <Box>
                     <Card>
                         <CardContent sx={{ height: 300 }}>
@@ -188,7 +174,7 @@ export default function Dashboard() {
                                         onClick={(e: any) => {
                                             let b = e?.activeLabel as string | undefined;
                                             if (b) {
-                                                b = b.replace(/[–—]/g, '-'); // 统一连字符
+                                                b = b.replace(/[–—]/g, '-');
                                                 setBucketFilter(b);
                                                 setOverdueOnly(true);
                                                 setPage(0);

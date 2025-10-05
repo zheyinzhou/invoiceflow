@@ -14,6 +14,6 @@ public record InvoiceView(
         LocalDate dueDate,
 
         Boolean overdue,        // balance>0 && dueDate < today
-        Integer daysUntilDue,   // 正=还剩几天到期；负=已逾期多少天
+        Integer daysUntilDue,
         String agingBucket      // 0–7 / 8–30 / 31–60 / >60 / NOT_OVERDUE
 ) {}

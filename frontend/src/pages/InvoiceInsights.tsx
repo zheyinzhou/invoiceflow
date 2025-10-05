@@ -1,4 +1,3 @@
-// InvoiceInsights.tsx
 import {useEffect, useMemo, useState} from 'react';
 import {
     Box,
@@ -197,7 +196,7 @@ export default function InvoiceInsights() {
                         </CardContent>
                     </Card>
 
-                    {/* 下：Aging Breakdown（Overdue only） */}
+                    {/* Aging Breakdown（Overdue only） */}
                     <Card sx={{mt: 2,ml:0}}>
                         <CardContent>
                             <Typography variant="subtitle2" color="text.secondary" sx={{mb: 1}}>
