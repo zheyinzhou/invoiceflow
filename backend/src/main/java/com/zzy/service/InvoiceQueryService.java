@@ -128,7 +128,7 @@ public class InvoiceQueryService {
     }
 
     /**
-     * Aging 分桶：
+     * Aging buckets：
      * - NOT_OVERDUE（ including balance<=0 or dueDate>=today）
      * - 0-7 / 8-30 / 31-60 / 61-90 / >90：
      */
