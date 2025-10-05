@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+qbo:
+  clientId: ${CLIENT_ID}
+  clientSecret: ${CLIENT_SECRET}
+  redirectUri: "http://localhost:8080/oauth2redirect"
+  environment: "SANDBOX"
+
+spring:
+  profiles:
+    active: dev
+  jpa:
+    show-sql: true
+  web:
+    cors:
+      mappings:
+        - path: "/**"
+          allowed-origins: "http://localhost:5173"
+          allowed-methods: "*"
+          allowed-headers: "*"
+          allow-credentials: true
