@@ -1,5 +1,3 @@
-Based on the project context provided, I'll create a comprehensive README.md file for the InvoiceFlow project.
-
 # InvoiceFlow
 
 InvoiceFlow is a comprehensive invoice management system that integrates with QuickBooks Online (QBO) API to synchronize and manage invoice data. The application consists of a Spring Boot backend and a React frontend.
@@ -119,20 +117,18 @@ The frontend application stores authentication information in `localStorage`:
 ## API Endpoints
 
 ### Authentication
-- `GET /` - Home page
-- `GET /connected` - Connected page
-- `GET /connectToQuickbooks` - Connect to QuickBooks
-- `GET /signInWithIntuit` - Sign in with Intuit
-- `GET /getAppNow` - Get app now
+- `GET /connect` - Link to connect page
+- `GET /connected` - Connected
 
 ### Invoice Management
 - `POST /api/admin/sync-qbo` - Sync invoices from QBO
 - `GET /api/invoices` - Get invoice list with pagination
-- `POST /api/invoices` - Create new invoice
 
 ### Analytics
-- `GET /api/stats/status` - Get status statistics
+- `GET /api/invoices/aging/overdue` - Get status statistics
 - `GET /api/summary` - Get summary dashboard data
+- `GET /api/risk/kpi/overdue-by-due` - Overdue trend (daily or weekly)
+- `GET /api/risk/customers` - Customer risk ranking
 
 ## Development
 
